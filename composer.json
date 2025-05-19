@@ -1,7 +1,7 @@
 {
-    "name": "inertiaui/modal",
+    "name": "cadix/modal",
     "description": "Inertia Modal",
-    "homepage": "https://github.com/inertiaui/modal",
+    "homepage": "https://github.com/Cadix-Development/modal",
     "license": "MIT",
     "require": {
         "php": "^8.2",
