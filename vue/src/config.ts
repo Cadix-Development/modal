@@ -20,8 +20,9 @@ const defaultConfig = {
 }
 
 class Config {
+    private config: typeof defaultConfig|null
     constructor() {
-        this.config = {}
+        this.config = null
         this.reset()
     }
 
@@ -47,7 +48,7 @@ class Config {
         current[keys[keys.length - 1]] = value
     }
 
-    get(key) {
+    get(key: string) {
         if (typeof key === 'undefined') {
             return this.config
         }
