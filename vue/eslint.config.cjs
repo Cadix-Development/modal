@@ -6,6 +6,7 @@ const prettier = require("eslint-plugin-prettier");
 const unusedImports = require("eslint-plugin-unused-imports");
 const parser = require("vue-eslint-parser");
 const js = require("@eslint/js");
+const pluginVue = require("eslint-plugin-vue");
 
 const {
     FlatCompat,
@@ -18,9 +19,9 @@ const compat = new FlatCompat({
 });
 
 module.exports = defineConfig([{
+    ...pluginVue.configs['flat/recommended'],
     extends: compat.extends(
         "eslint:recommended",
-        "plugin:vue/vue3-recommended",
         "plugin:tailwindcss/recommended",
         "prettier",
     ),

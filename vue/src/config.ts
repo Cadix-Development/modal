@@ -1,4 +1,20 @@
-const defaultConfig = {
+interface ModalConfig {
+    closeButton: boolean
+    closeExplicitly: boolean
+    maxWidth: string
+    paddingClasses: string
+    panelClasses: string
+    position: string
+}
+
+interface ConfigType {
+    type: string,
+    navigate: boolean,
+    modal: ModalConfig,
+    slideover: ModalConfig,
+}
+
+const defaultConfig: ConfigType = {
     type: 'modal',
     navigate: false,
     modal: {
@@ -16,21 +32,22 @@ const defaultConfig = {
         paddingClasses: 'p-4 sm:p-6',
         panelClasses: 'bg-white min-h-screen',
         position: 'right',
-    },
+    }
 }
 
 class Config {
-    private config: typeof defaultConfig|null
+    private config: ConfigType
+
     constructor() {
-        this.config = null
+        this.config = defaultConfig
         this.reset()
     }
 
     reset() {
-        this.config = JSON.parse(JSON.stringify(defaultConfig))
+        this.config = JSON.parse(JSON.stringify(defaultConfig)) as ConfigType
     }
 
-    put(key, value) {
+    put(key: ConfigType | string, value: any): void {
         if (typeof key === 'object') {
             this.config = {
                 type: key.type ?? defaultConfig.type,
@@ -40,25 +57,33 @@ class Config {
             }
             return
         }
+
         const keys = key.split('.')
-        let current = this.config
+        let current: any = this.config
         for (let i = 0; i < keys.length - 1; i++) {
-            current = current[keys[i]] = current[keys[i]] || {}
+            const k = keys[i]
+            if (current[k] == undefined) {
+                current[k] = {}
+            }
+            current = current[k]
         }
-        current[keys[keys.length - 1]] = value
+
+        const lastKey = keys[keys.length - 1];
+        current[lastKey] = value
     }
 
-    get(key: string) {
+    get(key?: string) {
         if (typeof key === 'undefined') {
             return this.config
         }
+
         const keys = key.split('.')
-        let current = this.config
+        let current: any = this.config
         for (const k of keys) {
-            if (current[k] === undefined) {
+            if (current[k as keyof ConfigType] === undefined) {
                 return null
             }
-            current = current[k]
+            current = current[k as keyof ConfigType]
         }
         return current
     }
@@ -67,6 +92,6 @@ class Config {
 const configInstance = new Config()
 
 export const resetConfig = () => configInstance.reset()
-export const putConfig = (key, value) => configInstance.put(key, value)
-export const getConfig = (key) => configInstance.get(key)
-export const getConfigByType = (isSlideover, key) => configInstance.get(isSlideover ? `slideover.${key}` : `modal.${key}`)
+export const putConfig = (key: ConfigType | string, value: any) => configInstance.put(key, value)
+export const getConfig = (key: string) => configInstance.get(key)
+export const getConfigByType = (isSlideover: boolean | null, key: string) => configInstance.get(isSlideover ? `slideover.${key}` : `modal.${key}`)

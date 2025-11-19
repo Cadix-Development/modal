@@ -1,5 +1,5 @@
-import { getConfig, putConfig, resetConfig } from './config.js'
-import { useModalStack, initFromPageProps, renderApp } from './modalStack.js'
+import { getConfig, putConfig, resetConfig } from './config'
+import { useModalStack, initFromPageProps, renderApp } from './modalStack'
 import useModal from './useModal.js'
 import Deferred from './Deferred.vue'
 import HeadlessModal from './HeadlessModal.vue'
@@ -7,8 +7,9 @@ import Modal from './Modal.vue'
 import ModalLink from './ModalLink.vue'
 import ModalRoot from './ModalRoot.vue'
 import WhenVisible from './WhenVisible.vue'
+import  { type ModalOptions, type Modal as ModalClass } from './modalStack'
 
-function visitModal(url, options = {}) {
+function visitModal(url: string, options: ModalOptions = {}) {
     return useModalStack()
         .visit(
             url,
@@ -21,7 +22,7 @@ function visitModal(url, options = {}) {
             options.queryStringArrayFormat ?? 'brackets',
             options.navigate ?? getConfig('navigate'),
         )
-        .then((modal) => {
+        .then((modal: ModalClass) => {
             const listeners = options.listeners ?? {}
 
             Object.keys(listeners).forEach((event) => {
